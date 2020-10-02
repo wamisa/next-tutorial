@@ -1,26 +1,33 @@
-import { func } from 'prop-types'
 import Layout from '../../components/layout'
+import { getAllPostIds, getPostData } from '../../lib/posts'
 
-export default function Post() {
+export default function Post({ postData }) {
     return (
         <Layout>
-            <Head>
-                <title>First Post</title>
-            </Head>
-            <h1>First Post</h1>
-            <h2>
-                <Link href="/">
-                <a>Back to home</a>
-                </Link>
-            </h2>
+            {postData.title}
+            <br />
+            {postData.id}
+            <br />
+            {postData.date}
         </Layout>
     )
 }
 
 export async function getStaticPaths() {
     // id としてとりうる値のリストを返す
+    const paths = getAllPostIds()
+    return {
+        paths,
+        fallback: false
+    }
 }
 
 export async function getStaticProps({ params }) {
     // params.id を使用して、ブログの投稿に必要なデータを取得する
+    const postData = getPostData(params.id)
+    return {
+        props: {
+            postData
+        }
+    }
 }
